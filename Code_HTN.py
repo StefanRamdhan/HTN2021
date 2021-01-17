@@ -181,3 +181,5 @@ def how_many(dataframe=df,
     print("Risk factor:\t\t\t\t{:.2f}%".format(risk_factor))
 
     return population_dict[city], num_sick, num_fatal, num_resolved, num_sick_past, num_not_resolved, risk_factor
+
+print(how_many(city = "Toronto", means_of_transport= "Bus"))

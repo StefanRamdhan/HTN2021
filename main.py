@@ -1,3 +1,15 @@
+# uses python3
+
+import numpy as np
+import pandas as pd
+import scipy
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from scipy.signal import savgol_filter
+
+from datetime import datetime, timedelta
+from datetime import date
+
 from cloudant import Cloudant
 from flask import Flask, render_template, request, jsonify
 import atexit
@@ -6,6 +18,7 @@ import json
 
 app = Flask(__name__, static_url_path='')
 
+covidInfoLoc = ''
 db_name = 'mydb'
 client = None
 db = None
@@ -48,13 +61,31 @@ def root():
 # *     "name": "Bob"
 # * }
 # */
-@app.route('/api/visitors', methods=['GET'])
-def get_visitor():
+
+@app.route('/api/calculator, methods=['GET'])
+def calcRisk():
+
+    # https://www.digitalocean.com/community/tutorials/processing-incoming-request-data-in-flask
+    means_of_transport = request.args.get('transport')  # if key doesn't exist, returns None
+    city = request.args.get('city')  # if key doesn't exist, returns None
+    var1 = request.args.get('var1')  # if key doesn't exist, returns None
+    var2 = request.args.get('var2')  # if key doesn't exist, returns None
+    var3 = request.args.get('var3')  # if key doesn't exist, returns None
+    var4 = request.args.get('var4')  # if key doesn't exist, returns None
+
     if client:
-        return jsonify(list(map(lambda doc: doc['name'], db)))
+        data = {
+            'transport': means_of_transport,
+            'city': city,
+            'var1': var1,
+            'var2': var2,
+            'var3': var3,
+            'var4': var4
+        }
+        my_document = db.create_document(data)
     else:
         print('No database')
-        return jsonify([])
+        return jsonify(data)
 
 # /**
 #  * Endpoint to get a JSON array of all the visitors in the database
@@ -67,17 +98,20 @@ def get_visitor():
 #  * [ "Bob", "Jane" ]
 #  * @return An array of all the visitor names
 #  */
-@app.route('/api/visitors', methods=['POST'])
-def put_visitor():
+
+@app.route('/api/visualize', methods=['GET'])
+def visualize():
     user = request.json['name']
-    data = {'name':user}
+
+
+
+@app.route('/api/history, methods=['GET'])
+def printHistory():
     if client:
-        my_document = db.create_document(data)
-        data['_id'] = my_document['_id']
-        return jsonify(data)
+        return jsonify(list(map(lambda doc: doc['name'], db)))
     else:
         print('No database')
-        return jsonify(data)
+        return jsonify([])
 
 @atexit.register
 def shutdown():
