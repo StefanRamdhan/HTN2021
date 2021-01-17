@@ -3,7 +3,8 @@
 import numpy as np
 import pandas as pd
 import scipy
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, escape
+from urllib.parse import unquote
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from scipy.signal import savgol_filter
@@ -189,8 +190,11 @@ print(how_many(city = "Toronto", means_of_transport= "Bus"))
 
 @app.route('/getstats')
 def getstats():
-    city = request.args.get("city")
+    city = unquote(request.args.get("city"))
     mode = request.args.get("mode")
+
+    print(request.args)
+    print(city)
 
     pop, sick, fatal, resolved, sick_past, non_resolved, risk_factor = how_many(city=  city, means_of_transport = mode)
     
