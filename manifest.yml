@@ -2,4 +2,6 @@
 applications:
  - name: HTN2021
    random-route: true
-   memory: 128M
+   memory: 256M
+   CF_STAGING_TIMEOUT: 20
+   cc.packages.max_package_size: 16M
