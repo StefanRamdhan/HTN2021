@@ -3,12 +3,15 @@
 import numpy as np
 import pandas as pd
 import scipy
+from flask import Flask, request, jsonify
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from scipy.signal import savgol_filter
 
 from datetime import datetime, timedelta
 from datetime import date
+
+app = Flask(__name__)
 
 
 df = pd.read_csv('conposcovidloc.csv')
@@ -183,3 +186,23 @@ def how_many(dataframe=df,
     return population_dict[city], num_sick, num_fatal, num_resolved, num_sick_past, num_not_resolved, risk_factor
 
 print(how_many(city = "Toronto", means_of_transport= "Bus"))
+
+@app.route('/getstats')
+def getstats():
+    city = request.args.get("city")
+    mode = request.args.get("mode")
+
+    pop, sick, fatal, resolved, sick_past, non_resolved, risk_factor = how_many(city=  city, means_of_transport = mode)
+    
+    return jsonify({
+        "pop": int(pop),
+        "sick": int(sick),
+        "fatal": int(fatal),
+        "resolved": int(resolved),
+        "sick_past": int(sick_past),
+        "non_resolved": int(non_resolved),
+        "risk_factor": int(risk_factor)
+    })
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)

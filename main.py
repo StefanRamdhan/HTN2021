@@ -79,21 +79,21 @@ def calcRisk():
     var3 = request.args.get('var3')  # if key doesn't exist, returns None
     var4 = request.args.get('var4')  # if key doesn't exist, returns None
 
+    data = {
+        'transport': means_of_transport,
+        'city': city,
+        'var1': var1,
+        'var2': var2,
+        'var3': var3,
+        'var4': var4
+    }
     if client:
-        data = {
-            'transport': means_of_transport,
-            'city': city,
-            'var1': var1,
-            'var2': var2,
-            'var3': var3,
-            'var4': var4
-        }
         my_document = db.create_document(data)
     else:
         print('No database')
-        return jsonify(data)
+        jsonify(data)
 
-    calculatedRisk = output_trends(df, city, var1, var2)
+    calculatedRisk = how_many(df, city = city, means_of_transport=means_of_transport)
 
     return jsonify(
         population = calculatedRisk[0],
@@ -326,4 +326,5 @@ def shutdown():
         client.disconnect()
 
 if __name__ == '__main__':
+
     app.run(host='0.0.0.0', port=port, debug=True)
