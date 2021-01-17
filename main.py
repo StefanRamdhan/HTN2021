@@ -68,7 +68,7 @@ def root():
 # * }
 # */
 
-@app.route('/api/calculator, methods=['GET'])
+@app.route('/api/calculator', methods=['GET'])
 def calcRisk():
 
     # https://www.digitalocean.com/community/tutorials/processing-incoming-request-data-in-flask

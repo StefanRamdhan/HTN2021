@@ -1,2 +1,7 @@
 Flask>=1.0.0
 cloudant==2.13.0
+pandas==1.2.0
+numpy==1.19.5
+scipy==1.6.0
+matplotlib==3.3.3
+sklearn==0.24.0
