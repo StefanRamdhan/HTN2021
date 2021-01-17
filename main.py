@@ -136,21 +136,13 @@ def visualize():
 #  * [ "Bob", "Jane" ]
 #  * @return An array of all the visitor names
 #  */
-@app.route('/api/history, methods=['GET'])
+@app.route('/api/history', methods=['GET'])
 def printHistory():
     if client:
         return jsonify(list(map(lambda doc: doc['name'], db)))
     else:
         print('No database')
         return jsonify([])
-
-@atexit.register
-def shutdown():
-    if client:
-        client.disconnect()
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)
 
 #%-------------------------------------------------------------------------------------------%
 
@@ -327,3 +319,11 @@ def how_many(dataframe=df,
     print("Risk factor:\t\t\t\t{:.2f}%".format(risk_factor))
 
     return population, num_sick, num_fatal, num_resolved, num_sick_past, num_not_resolved, risk_factor
+
+@atexit.register
+def shutdown():
+    if client:
+        client.disconnect()
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=port, debug=True)
